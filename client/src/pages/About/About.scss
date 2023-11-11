@@ -1,21 +1,57 @@
-.about-page {
-    padding: 20px;
-    background-color: #f3f3f3;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  
-    h1 {
-      color: #333;
-      font-size: 24px;
-      margin-bottom: 10px;
-    }
-  
-    p {
-      color: #666;
-      font-size: 16px;
-      line-height: 1.6;
-    }
-  
-    // Add more styles as needed
+.about {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: #333;
+
+  h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #0056b3;
+      text-align: center;
   }
-  
+
+  section {
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      h2 {
+          font-size: 1.8rem;
+          margin-bottom: 0.5rem;
+          color: #0275d8;
+      }
+
+      p, li {
+          font-size: 1rem;
+          line-height: 1.6;
+      }
+
+      ul {
+          list-style-type: circle;
+          margin-left: 20px;
+      }
+  }
+
+  .about__description {
+      // Unique styles for the description section
+      border-left: 4px solid #0275d8;
+      padding-left: 15px;
+  }
+
+  .about__tech-stack {
+      // Unique styles for the tech stack section
+      border-left: 4px solid #5cb85c;
+      padding-left: 15px;
+      background-color: #efffed;
+  }
+
+  .about__applications {
+      // Unique styles for the applications section
+      border-left: 4px solid #f0ad4e;
+      padding-left: 15px;
+      background-color: #fff5e6;
+  }
+}
