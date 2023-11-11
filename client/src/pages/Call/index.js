@@ -112,7 +112,6 @@ const Call = () => {
         return () => script.parentNode.removeChild(script);      
     }, []);
 
-    // From the video stream make the predictions and label the video tiles
     useEffect(() => {
         const generateOutput = async (video, timestamp) => {
             try {
@@ -137,8 +136,7 @@ const Call = () => {
         };
 
         let intervalId;
-        
-        // Call the model on the video images
+
         const detect = async () => {
             await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
             await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
@@ -277,7 +275,6 @@ const Call = () => {
                     </div>
                 </div>
             </div>)}
-            {/* Video Interface */}
             <div className="call__content">
                 <div className="call__content__header">
                     <div className="call__content__header__time">
