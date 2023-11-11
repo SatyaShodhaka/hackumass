@@ -1,5 +1,5 @@
 import "./App.scss";
-import { HashRouter, Routes, Route } from "react-router-dom";
+import {Routes, Route, BrowserRouter } from "react-router-dom";
 
 import About from "./pages/About";
 import Analytics from "./pages/Analytics";
@@ -10,7 +10,7 @@ import PageNotFound from "./pages/PageNotFound";
 
 const App = () => {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <Routes>
         <Route path="/about" element={<About />} />
         <Route path="/analytics" element={<Analytics />} />
@@ -19,7 +19,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
   );
 };
 
