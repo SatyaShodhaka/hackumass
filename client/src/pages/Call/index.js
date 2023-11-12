@@ -48,13 +48,16 @@ const Call = () => {
     const client = useClient();
     const { ready, tracks } = useMicrophoneAndCameraTracks();
 
+    
+
     const leaveChannel = async (path) => {
         await client.leave();
         client.removeAllListeners();
         tracks[0].close();
         tracks[1].close();
         setStart(false);
-        navigate(path, { state: { data } });
+        const aggData = [data,conversation]
+        navigate(path, { state: { aggData } });
     };
 
     useEffect(() => {
@@ -146,7 +149,6 @@ const Call = () => {
             intervalId = setInterval(() => {
                 const timestamp = Date.now();
                 const videos = document.getElementsByTagName("video");
-
                 for (let i = 0; i < videos.length; i++) {
                     const video = videos[i];
                     generateOutput(video, timestamp);
@@ -209,7 +211,8 @@ const Call = () => {
             client.on("user-left", user => {
                 setUsers(prevUsers => prevUsers.filter(element => element.uid !== user.uid));
             });
-
+            
+            // Creating agora client
             try {
                 await client.join(config.appId, name, config.token, username);
             } catch (e) {
@@ -233,12 +236,87 @@ const Call = () => {
         console.log('New user added:', users[users.length-1])
     },[users])
 
+
+    const getAudioFromClient = () => {
+        const audio  = client.getAudioTrack();
+        // use this audio to make preds
+    }
+
+
+    // Captions logic
+    const [transcript, setTranscript] = useState('');
+    const [listening, setListening] = useState(false);
+    const [conversation, setConversation] = useState([]);
+    
+    let recognition;
+
+    useEffect(() => {
+        // Check for browser support
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            console.error("Your browser does not support the Web Speech API");
+            return;
+        }
+
+        // Initialize recognition
+        recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = 'en-US';
+
+        // Event handlers
+        recognition.onresult = (event) => {
+            let interimTranscript = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                const transcript = event.results[i][0].transcript;
+                interimTranscript += transcript;
+            }
+            const converse = conversation.push(interimTranscript)
+            setTranscript(interimTranscript);
+            setConversation(conversation => [...conversation, interimTranscript]);
+        };
+
+        recognition.onend = () => {
+            if (listening) {
+                recognition.start();
+            }
+        };
+
+        // Start recognition if listening
+        if (listening) {
+            recognition.start();
+        }
+
+        // Cleanup function
+        return () => {
+            recognition.stop();
+        };
+    }, [listening]);
+
+    useEffect(()=>{
+        console.log(conversation)
+    },[conversation])
+
+    const toggleListening = () => {
+        if (listening) {
+            recognition.stop();
+        } else {
+            recognition.start();
+        }
+        setListening(!listening);
+    };
+    useEffect(()=>{
+        recognition.start()
+    },[])
+
+
+
     return (
         <div className="call">
             {showOverview && (<div className="call__overview">
                 <div className="call__overview__modal">
                     <div className="call__overview__modal__content">
-                        <div className="call__overview__modal__content__title">Here is a quick overview of your meeting</div>
+                        <div className="call__overview__modal__content__title">Here are some insights from your last meeting</div>
                         <div className="call__overview__modal__content__graph">
                             <div className="call__overview__modal__content__graph__piechart">
                                 <VictoryPie
@@ -267,9 +345,11 @@ const Call = () => {
                         </div>
                         <div className="call__overview__modal__content__submission">
                             <div className="call__overview__modal__content__submission__description">View the breakdown of your meeting in a detailed manner</div>
-                            <button className="call__overview__modal__content__submission__expand" onClick={() => leaveChannel("/analytics")}>Expand</button>
-                            <div className="call__overview__modal__content__submission__leave">
-                                <button onClick={() => leaveChannel("/")}>Leave</button>
+                            <div style={{ display: 'flex', justifyContent: 'center'}}>
+                                <button className="call__overview__modal__content__submission__expand" onClick={() => leaveChannel("/analytics")}>Details</button>
+                                <div className="call__overview__modal__content__submission__leave">
+                                    <button onClick={() => leaveChannel("/")}>Leave</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -290,7 +370,13 @@ const Call = () => {
                     </div>
                 </div>
                 <div className="call__content__videos">
-                    {!showOverview && ready && tracks && <Videos users={users} tracks={tracks} />}
+                    {!showOverview && ready && tracks && <Videos users={users} tracks={tracks} />
+                    
+                    }
+                </div>
+
+                <div>
+                    <p className='containerCaptions'>Captions: {transcript}</p>
                 </div>
                 <Controls tracks={tracks} onLeave={() => {
                     const counts = {};

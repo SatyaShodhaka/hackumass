@@ -85,14 +85,17 @@
                     }
 
                     &__expand {
+                        display: flex;
                         background-color: #A2CAE0;
-                        margin-bottom: 12px;
                     }
 
                     &__description {
+                        display: flex;
                         font-size: 16px;
                         color: #A0A0A0;
                         margin-bottom: 12px;
+                        margin-left: 40px;
+                        margin-right: auto;
                     }
 
                     &__leave {

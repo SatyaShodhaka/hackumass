@@ -4,7 +4,7 @@ import { VictoryPie } from "victory-pie";
 import { VictoryChart, VictoryLine, VictoryAxis, VictoryLabel } from "victory";
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const emotions = ["happy", "sad", "angry", "disgusted", "fearful", "neutral", "surprised"];
 
@@ -30,8 +30,13 @@ const mapEmotionToColor = {
 
 const Analytics = () => {
     const navigate = useNavigate();
-    const { state: { data } } = useLocation();
+    const { state:  {data} } = useLocation();
+
     const [display, setDisplay] = useState(["happy" + " " + mapEmotionToEmoji["happy"], "sad" + " " + mapEmotionToEmoji["sad"], "angry" + " " + mapEmotionToEmoji["angry"]]);
+
+    const conversation = data[1];
+    const [isLoading, setIsLoading] = useState(false)
+
 
     const counts = {};
     for (let i = 0; i < data.length; i++) {
@@ -103,9 +108,17 @@ const Analytics = () => {
         final[k] = arr;
     } 
 
+    // NLP apis before rendering the page
+    useEffect(()=>{
+        // Write the logic to get the sentiment calling
+        console.log(conversation)
+    },[])
+
     return (
         <div className="analytics">
-            <div className="analytics__floating-button" onClick={() => navigate("/")}>
+            {!isLoading && 
+            <div>
+                <div className="analytics__floating-button" onClick={() => navigate("/")}>
                 <LogoutIcon fontSize="large" style={{ color: "white" }} />
             </div>
             <div className="analytics__content">
@@ -222,6 +235,14 @@ const Analytics = () => {
                 </div>
                 <div style={{ height: 30 }} />
             </div>
+            
+            </div>}
+
+            {isLoading&&
+            <div>
+                Loading.....
+            </div>
+            }
         </div>
     );
 };
