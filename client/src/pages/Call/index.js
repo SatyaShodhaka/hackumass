@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { VictoryPie } from "victory-pie";
 import * as faceapi from "face-api.js";
 import { Switch } from "@mui/material";
+import Captions from "../../components/Captions";
 
 const emotions = ["happy", "sad", "angry", "disgusted", "fearful", "neutral", "surprised"];
 
@@ -56,8 +57,7 @@ const Call = () => {
         tracks[0].close();
         tracks[1].close();
         setStart(false);
-        const aggData = [data,conversation]
-        navigate(path, { state: { aggData } });
+        navigate(path, { state: { data: data, conversation: conversation } });
     };
 
     useEffect(() => {
@@ -378,6 +378,7 @@ const Call = () => {
                 <div>
                     <p className='containerCaptions'>Captions: {transcript}</p>
                 </div>
+                <Captions/>
                 <Controls tracks={tracks} onLeave={() => {
                     const counts = {};
                     for (let i = 0; i < data.length; i++) {

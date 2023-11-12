@@ -6,6 +6,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+import { Configuration, OpenAIApi } from "openai";
+
 const emotions = ["happy", "sad", "angry", "disgusted", "fearful", "neutral", "surprised"];
 
 const mapEmotionToEmoji = {
@@ -28,14 +30,19 @@ const mapEmotionToColor = {
     "surprised": "#FBBD4B"
 };
 
+
+
 const Analytics = () => {
     const navigate = useNavigate();
-    const { state:  {data} } = useLocation();
+
+    const location = useLocation();
+    const { data, conversation } = location.state || {};
 
     const [display, setDisplay] = useState(["happy" + " " + mapEmotionToEmoji["happy"], "sad" + " " + mapEmotionToEmoji["sad"], "angry" + " " + mapEmotionToEmoji["angry"]]);
 
-    const conversation = data[1];
-    const [isLoading, setIsLoading] = useState(false)
+    
+    const [isLoading, setIsLoading] = useState(false);
+
 
 
     const counts = {};
@@ -110,7 +117,7 @@ const Analytics = () => {
 
     // NLP apis before rendering the page
     useEffect(()=>{
-        // Write the logic to get the sentiment calling
+        // Write the logic to get the sentiment
         console.log(conversation)
     },[])
 
