@@ -17,8 +17,8 @@ const Home = () => {
                     <img src={LandingImage} />
                 </div>
                 <div className="home__body__content">
-                    <div className="home__body__content__title">AI Meets Emotion😊</div>
-                    <div className="home__body__content__description">Elevating Video Chats with Sentiment Understanding</div>
+                    <div className="home__body__content__title"><span>AI</span> Meets <span>Emotion</span>😊</div>
+                    <div className="home__body__content__description">Elevating Video Chats with Sentiment</div>
                     <div className="home__body__content__subtitle">Rediscover the human connection in every virtual meeting with MoodMeter.AI . where emotions are as visible as the words spoken. Enriching Video Chats with Empathetic Insights.</div>
 
                     <input

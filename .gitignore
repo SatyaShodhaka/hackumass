@@ -49,7 +49,8 @@ web_modules/
 
 # Optional npm cache directory
 .npm
-client/node_modules
+.client/node_modules
+.node_modules
 # Optional eslint cache
 .eslintcache
 
@@ -128,6 +129,4 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-node_modules
-node_modules
 node_modules
