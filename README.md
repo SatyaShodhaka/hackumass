@@ -30,7 +30,7 @@ Agora_API = "INSERT YOUR API KEY"
 $ npm run-script start
 ```
 * Access the Application: Open a web browser and visit http://localhost:3000 to access MoodMeter.AI.
-Usage
+### Usage
 * Join a Meeting: Log into the platform and join an online meeting.
 * Enable Emotion Analysis: Activate the emotion detection feature to start analyzing the emotional state of participants.
 * View Insights: Real-time emotional insights are displayed on the dashboard, offering an enhanced understanding of the meeting dynamics.
