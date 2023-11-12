@@ -1,57 +1,66 @@
+// About.scss
+
 .about {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  color: #333;
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #333;
+    line-height: 1.6;
 
-  h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      color: #0056b3;
-      text-align: center;
-  }
+    h1 {
+        font-size: 2rem;
+        color: #0056b3;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-weight: bold;
+    }
 
-  section {
-      margin-bottom: 2rem;
-      padding: 1rem;
-      background-color: #f8f9fa;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    section {
+        margin-bottom: 1.6rem;
+        padding: 20px;
+        background-color: #8dadcd;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
-      h2 {
-          font-size: 1.8rem;
-          margin-bottom: 0.5rem;
-          color: #0275d8;
-      }
+        h2 {
+            font-size: 1.3rem;
+            color: #0275d8;
+            margin-bottom: 1rem;
+        }
 
-      p, li {
-          font-size: 1rem;
-          line-height: 1.6;
-      }
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
 
-      ul {
-          list-style-type: circle;
-          margin-left: 20px;
-      }
-  }
+        ul {
+            padding-left: 20px;
+            list-style-type: disc;
 
-  .about__description {
-      // Unique styles for the description section
-      border-left: 4px solid #0275d8;
-      padding-left: 15px;
-  }
+            li {
+                margin-bottom: 0.5rem;
+            }
+        }
+    }
 
-  .about__tech-stack {
-      // Unique styles for the tech stack section
-      border-left: 4px solid #5cb85c;
-      padding-left: 15px;
-      background-color: #efffed;
-  }
+    .about__description {
+        border-left: 5px solid #0275d8;
+        background-color: #e7f1ff;
+    }
 
-  .about__applications {
-      // Unique styles for the applications section
-      border-left: 4px solid #f0ad4e;
-      padding-left: 15px;
-      background-color: #fff5e6;
-  }
+    .about__tech-stack {
+        border-left: 5px solid #5cb85c;
+        background-color: #ebf5eb;
+    }
+
+    .about__business-value, .about__future-vision {
+        border-left: 5px solid #f0ad4e;
+        background-color: #fff8e6;
+    }
+
+    .about__applications {
+        border-left: 5px solid #d9534f;
+        background-color: #fef4f4;
+    }
 }
