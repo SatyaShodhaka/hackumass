@@ -2,10 +2,13 @@ import openai
 from flask import Flask, request, jsonify
 import os
  
+from flask_cors import CORS
+
 app = Flask(__name__)
+CORS(app)
 
 # Set your OpenAI API key here
-openai.api_key = os.environ.get('OPENAI_API_KEY')
+openai.api_key = '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'
 def analyze_emotions_and_summarize(text):
     # Classify emotion
     emotion_response = openai.Completion.create(

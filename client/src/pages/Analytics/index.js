@@ -42,6 +42,7 @@ const Analytics = () => {
 
     
     const [isLoading, setIsLoading] = useState(false);
+    const [predictionResult, setPredictionResult] = useState();
 
 
 
@@ -115,10 +116,36 @@ const Analytics = () => {
         final[k] = arr;
     } 
 
+    const makePrediction = async () => {
+        try {
+            setIsLoading(true);
+            const response = await fetch('http://127.0.0.1:5000/prediction', {
+                method: 'POST',
+                headers: {
+                    'Authorization' : 'Bearer ',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ texts: [conversation.join()] })
+            });
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+    
+            const result = await response.json();
+            console.log(result);
+            setPredictionResult(result);
+        } catch (error) {
+            console.error('Error making prediction:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     // NLP apis before rendering the page
     useEffect(()=>{
         // Write the logic to get the sentiment
-        console.log(conversation)
+        makePrediction();
     },[])
 
     return (

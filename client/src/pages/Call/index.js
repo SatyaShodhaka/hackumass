@@ -8,7 +8,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { VictoryPie } from "victory-pie";
 import * as faceapi from "face-api.js";
 import { Switch } from "@mui/material";
-import Captions from "../../components/Captions";
 
 const emotions = ["happy", "sad", "angry", "disgusted", "fearful", "neutral", "surprised"];
 
@@ -266,14 +265,20 @@ const Call = () => {
 
         // Event handlers
         recognition.onresult = (event) => {
+            let finalTranscript = '';
             let interimTranscript = '';
             for (let i = event.resultIndex; i < event.results.length; i++) {
-                const transcript = event.results[i][0].transcript;
-                interimTranscript += transcript;
+                const transcriptPiece = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                    finalTranscript += transcriptPiece;
+                } else {
+                    interimTranscript += transcriptPiece;
+                }
             }
-            const converse = conversation.push(interimTranscript)
             setTranscript(interimTranscript);
-            setConversation(conversation => [...conversation, interimTranscript]);
+            if (finalTranscript) {
+                setConversation(conversation => [...conversation, finalTranscript]);
+            }
         };
 
         recognition.onend = () => {
@@ -378,7 +383,6 @@ const Call = () => {
                 <div>
                     <p className='containerCaptions'>Captions: {transcript}</p>
                 </div>
-                <Captions/>
                 <Controls tracks={tracks} onLeave={() => {
                     const counts = {};
                     for (let i = 0; i < data.length; i++) {

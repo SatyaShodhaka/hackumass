@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import "./Videos.scss";
 import { AgoraVideoPlayer } from "agora-rtc-react";
-import Captions from "../Captions";
 
 const Video = ({ users, tracks }) => {
     const data = [];
@@ -22,10 +21,6 @@ const Video = ({ users, tracks }) => {
         }
         data.push(arr);
     }
-
-    useEffect(()=>{
-        console.log("USERS:", users)
-    })
 
     return (
         <div className="videos">
