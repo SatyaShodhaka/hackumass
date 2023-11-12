@@ -8,7 +8,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Set your OpenAI API key here
-openai.api_key = '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'
+openai.api_key = 'REPLACE THIS IN LOCAL'
 def analyze_emotions_and_summarize(text):
     # Classify emotion
     emotion_response = openai.Completion.create(
