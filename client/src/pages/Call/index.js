@@ -48,6 +48,9 @@ const Call = () => {
     const client = useClient();
     const { ready, tracks } = useMicrophoneAndCameraTracks();
 
+    const [conversation, setConversation] = useState([])
+
+
     const leaveChannel = async (path) => {
         await client.leave();
         client.removeAllListeners();
@@ -146,7 +149,6 @@ const Call = () => {
             intervalId = setInterval(() => {
                 const timestamp = Date.now();
                 const videos = document.getElementsByTagName("video");
-
                 for (let i = 0; i < videos.length; i++) {
                     const video = videos[i];
                     generateOutput(video, timestamp);
@@ -209,7 +211,8 @@ const Call = () => {
             client.on("user-left", user => {
                 setUsers(prevUsers => prevUsers.filter(element => element.uid !== user.uid));
             });
-
+            
+            // Creating agora client
             try {
                 await client.join(config.appId, name, config.token, username);
             } catch (e) {
@@ -232,6 +235,12 @@ const Call = () => {
     useEffect(()=>{
         console.log('New user added:', users[users.length-1])
     },[users])
+
+
+    const getAudioFromClient = () => {
+        const audio  = client.getAudioTrack();
+        // use this audio to make preds
+    }
 
     return (
         <div className="call">
@@ -290,8 +299,12 @@ const Call = () => {
                     </div>
                 </div>
                 <div className="call__content__videos">
-                    {!showOverview && ready && tracks && <Videos users={users} tracks={tracks} />}
+                    {!showOverview && ready && tracks && <Videos users={users} tracks={tracks} />
+                    
+                    }
                 </div>
+                
+                <Captions />
                 <Controls tracks={tracks} onLeave={() => {
                     const counts = {};
                     for (let i = 0; i < data.length; i++) {
@@ -314,6 +327,78 @@ const Call = () => {
                     setShowOverview(true);
                 }} />
             </div>
+        </div>
+    );
+};
+
+const Captions = () => {
+    const [transcript, setTranscript] = useState('');
+    const [listening, setListening] = useState(false);
+    const [conversation, setConversation] = useState([]);
+    
+    let recognition;
+
+    useEffect(() => {
+        // Check for browser support
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            console.error("Your browser does not support the Web Speech API");
+            return;
+        }
+
+        // Initialize recognition
+        recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = 'en-US';
+
+        // Event handlers
+        recognition.onresult = (event) => {
+            let interimTranscript = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                const transcript = event.results[i][0].transcript;
+                interimTranscript += transcript;
+            }
+            const converse = conversation.push(interimTranscript)
+            setTranscript(interimTranscript);
+            setConversation(conversation => [...conversation, interimTranscript]);
+        };
+
+        recognition.onend = () => {
+            if (listening) {
+                recognition.start();
+            }
+        };
+
+        // Start recognition if listening
+        if (listening) {
+            recognition.start();
+        }
+
+        // Cleanup function
+        return () => {
+            recognition.stop();
+        };
+    }, [listening]);
+
+    useEffect(()=>{
+        console.log(conversation)
+    },[conversation])
+
+    const toggleListening = () => {
+        if (listening) {
+            recognition.stop();
+        } else {
+            recognition.start();
+        }
+        setListening(!listening);
+    };
+    useEffect(()=>{
+        recognition.start()
+    },[])
+    return (
+        <div>
+            <p className='containerCaptions'>Captions: {transcript}</p>
         </div>
     );
 };
