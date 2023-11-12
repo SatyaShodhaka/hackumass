@@ -48,8 +48,7 @@ const Call = () => {
     const client = useClient();
     const { ready, tracks } = useMicrophoneAndCameraTracks();
 
-    const [conversation, setConversation] = useState([])
-
+    
 
     const leaveChannel = async (path) => {
         await client.leave();
@@ -57,7 +56,8 @@ const Call = () => {
         tracks[0].close();
         tracks[1].close();
         setStart(false);
-        navigate(path, { state: { data } });
+        const aggData = [data,conversation]
+        navigate(path, { state: { aggData } });
     };
 
     useEffect(() => {
@@ -242,96 +242,8 @@ const Call = () => {
         // use this audio to make preds
     }
 
-    return (
-        <div className="call">
-            {showOverview && (<div className="call__overview">
-                <div className="call__overview__modal">
-                    <div className="call__overview__modal__content">
-                        <div className="call__overview__modal__content__title">Here is a quick overview of your meeting</div>
-                        <div className="call__overview__modal__content__graph">
-                            <div className="call__overview__modal__content__graph__piechart">
-                                <VictoryPie
-                                    colorScale={aggregates.map(element => element.color)}
-                                    data={aggregates.map(element => element.percentage)}
-                                    style={{
-                                        data: {
-                                          stroke: "white", strokeWidth: 1
-                                        },
-                                        labels: {
-                                          fontSize: 0
-                                        }
-                                    }}
-                                />
-                            </div>
-                            <div className="call__overview__modal__content__graph__stats">
-                                {aggregates.map(element => (
-                                    <div className="call__overview__modal__content__graph__stats__stat" key={element.name}>
-                                        <div className="call__overview__modal__content__graph__stats__stat__color" style={{ backgroundColor: element.color }} />
-                                        <div className="call__overview__modal__content__graph__stats__stat__name">{element.name}</div>
-                                        <span>-</span>
-                                        <div className="call__overview__modal__content__graph__stats__stat__percentage">{element.percentage.toFixed(1)}%</div>  
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <div className="call__overview__modal__content__submission">
-                            <div className="call__overview__modal__content__submission__description">View the breakdown of your meeting in a detailed manner</div>
-                            <button className="call__overview__modal__content__submission__expand" onClick={() => leaveChannel("/analytics")}>Expand</button>
-                            <div className="call__overview__modal__content__submission__leave">
-                                <button onClick={() => leaveChannel("/")}>Leave</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>)}
-            <div className="call__content">
-                <div className="call__content__header">
-                    <div className="call__content__header__time">
-                        {time}
-                        <div className="call__content__header__time__switch">
-                            <div className="call__content__header__time__switch__label">Accessible Mode</div>
-                            <Switch checked={accessible} onChange={event => setAccessible(event.target.checked)} />
-                        </div>
-                    </div>
-                    <div className="call__content__header__profile">
-                        <AccountCircleIcon fontSize="large" />
-                        <div className="call__content__header__profile__name">{username}</div>
-                    </div>
-                </div>
-                <div className="call__content__videos">
-                    {!showOverview && ready && tracks && <Videos users={users} tracks={tracks} />
-                    
-                    }
-                </div>
-                
-                <Captions />
-                <Controls tracks={tracks} onLeave={() => {
-                    const counts = {};
-                    for (let i = 0; i < data.length; i++) {
-                        const emotion = data[i][1];
-                        if (!counts[emotion]) {
-                            counts[emotion] = 0;
-                        }
-                        counts[emotion] += 1;
-                    }
-                    const agg = [];
-                    for (let i = 0; i < emotions.length; i++) {
-                        const emotion = emotions[i];
-                        agg.push({
-                            name: `${emotion} ${mapEmotionToEmoji[emotion]}`,
-                            color: mapEmotionToColor[emotion],
-                            percentage: ((counts[emotion] | 0) / data.length) * 100
-                        });
-                    }
-                    setAggregates(agg);
-                    setShowOverview(true);
-                }} />
-            </div>
-        </div>
-    );
-};
 
-const Captions = () => {
+    // Captions logic
     const [transcript, setTranscript] = useState('');
     const [listening, setListening] = useState(false);
     const [conversation, setConversation] = useState([]);
@@ -396,9 +308,98 @@ const Captions = () => {
     useEffect(()=>{
         recognition.start()
     },[])
+
+
+
     return (
-        <div>
-            <p className='containerCaptions'>Captions: {transcript}</p>
+        <div className="call">
+            {showOverview && (<div className="call__overview">
+                <div className="call__overview__modal">
+                    <div className="call__overview__modal__content">
+                        <div className="call__overview__modal__content__title">Here are some insights from your last meeting</div>
+                        <div className="call__overview__modal__content__graph">
+                            <div className="call__overview__modal__content__graph__piechart">
+                                <VictoryPie
+                                    colorScale={aggregates.map(element => element.color)}
+                                    data={aggregates.map(element => element.percentage)}
+                                    style={{
+                                        data: {
+                                          stroke: "white", strokeWidth: 1
+                                        },
+                                        labels: {
+                                          fontSize: 0
+                                        }
+                                    }}
+                                />
+                            </div>
+                            <div className="call__overview__modal__content__graph__stats">
+                                {aggregates.map(element => (
+                                    <div className="call__overview__modal__content__graph__stats__stat" key={element.name}>
+                                        <div className="call__overview__modal__content__graph__stats__stat__color" style={{ backgroundColor: element.color }} />
+                                        <div className="call__overview__modal__content__graph__stats__stat__name">{element.name}</div>
+                                        <span>-</span>
+                                        <div className="call__overview__modal__content__graph__stats__stat__percentage">{element.percentage.toFixed(1)}%</div>  
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="call__overview__modal__content__submission">
+                            <div className="call__overview__modal__content__submission__description">View the breakdown of your meeting in a detailed manner</div>
+                            <div style={{ display: 'flex', justifyContent: 'center'}}>
+                                <button className="call__overview__modal__content__submission__expand" onClick={() => leaveChannel("/analytics")}>Details</button>
+                                <div className="call__overview__modal__content__submission__leave">
+                                    <button onClick={() => leaveChannel("/")}>Leave</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>)}
+            <div className="call__content">
+                <div className="call__content__header">
+                    <div className="call__content__header__time">
+                        {time}
+                        <div className="call__content__header__time__switch">
+                            <div className="call__content__header__time__switch__label">Accessible Mode</div>
+                            <Switch checked={accessible} onChange={event => setAccessible(event.target.checked)} />
+                        </div>
+                    </div>
+                    <div className="call__content__header__profile">
+                        <AccountCircleIcon fontSize="large" />
+                        <div className="call__content__header__profile__name">{username}</div>
+                    </div>
+                </div>
+                <div className="call__content__videos">
+                    {!showOverview && ready && tracks && <Videos users={users} tracks={tracks} />
+                    
+                    }
+                </div>
+
+                <div>
+                    <p className='containerCaptions'>Captions: {transcript}</p>
+                </div>
+                <Controls tracks={tracks} onLeave={() => {
+                    const counts = {};
+                    for (let i = 0; i < data.length; i++) {
+                        const emotion = data[i][1];
+                        if (!counts[emotion]) {
+                            counts[emotion] = 0;
+                        }
+                        counts[emotion] += 1;
+                    }
+                    const agg = [];
+                    for (let i = 0; i < emotions.length; i++) {
+                        const emotion = emotions[i];
+                        agg.push({
+                            name: `${emotion} ${mapEmotionToEmoji[emotion]}`,
+                            color: mapEmotionToColor[emotion],
+                            percentage: ((counts[emotion] | 0) / data.length) * 100
+                        });
+                    }
+                    setAggregates(agg);
+                    setShowOverview(true);
+                }} />
+            </div>
         </div>
     );
 };
