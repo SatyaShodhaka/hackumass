@@ -6,8 +6,6 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import { Configuration, OpenAIApi } from "openai";
-
 const emotions = ["happy", "sad", "angry", "disgusted", "fearful", "neutral", "surprised"];
 
 const mapEmotionToEmoji = {
@@ -29,6 +27,9 @@ const mapEmotionToColor = {
     "neutral": "#D280D2",
     "surprised": "#FBBD4B"
 };
+
+
+
 
 
 
