@@ -104,3 +104,39 @@
         }
     }
 }
+
+.prediction-result {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    margin: 20px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    .emotion, .emotion-summary, .overall-summary {
+        margin-bottom: 20px;
+
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #555;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+    }
+
+    .emotion {
+        border-bottom: 1px solid #ddd;
+    }
+
+    .emotion-summary {
+        border-bottom: 1px solid #ddd;
+    }
+
+    // Customize further based on your design requirements
+}

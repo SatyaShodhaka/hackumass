@@ -133,7 +133,7 @@ const Analytics = () => {
             }
     
             const result = await response.json();
-            console.log(result);
+            console.log(result)
             setPredictionResult(result);
         } catch (error) {
             console.error('Error making prediction:', error);
@@ -155,8 +155,29 @@ const Analytics = () => {
                 <div className="analytics__floating-button" onClick={() => navigate("/")}>
                 <LogoutIcon fontSize="large" style={{ color: "white" }} />
             </div>
+
             <div className="analytics__content">
-                <div className="analytics__content__details">
+
+            <div className="analytics__content__details">
+                    <div className="analytics__content__details__title">Detailed Text Summarization</div>
+                    <div className="analytics__content__details__content">
+                    <div className="prediction-result">
+                        <div className="emotion">
+                            <h2>Emotion Detected</h2>
+                            <p>{predictionResult.emotion}</p>
+                        </div>
+                        <div className="emotion-summary">
+                            <h2>Emotion Summary</h2>
+                            <p>{predictionResult.emotion_summary}</p>
+                        </div>
+                        <div className="overall-summary">
+                            <h2>Overall Summary</h2>
+                            <p>{predictionResult.overall_summary}</p>
+                        </div>
+                    </div>
+                    </div>
+                    </div>
+            <div className="analytics__content">
                     <div className="analytics__content__details__title">Detailed Analysis</div>
                     <div className="analytics__content__details__content">
                         <table>
