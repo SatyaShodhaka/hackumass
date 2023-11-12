@@ -42,7 +42,11 @@ const Analytics = () => {
 
     
     const [isLoading, setIsLoading] = useState(false);
-    const [predictionResult, setPredictionResult] = useState();
+    const [predictionResult, setPredictionResult] = useState({
+        "emotion": "Neutral",
+        "emotion_summary": "The text does not describe a specific emotion, but rather suggests a neutral approach to sentiment analysis on a conversation. The suggestion is to make one call to an open API endpoint in order to create an analysis, implying that no definite positive or negative emotions are present.",
+        "overall_summary": "This text is about creating sentiment analysis on a conversation using only one call to an open API endpoint."
+    });
 
 
 
